@@ -1,0 +1,23 @@
+{% import "macros/match_macros.html" as match_macros %}
+{% extends "layout_fullpage.html" %}
+{% block title %}
+{{ team["teamNumber"] }} - {{ team["nameShort"] }} Pit Dashboard
+{% endblock %}
+{% block content %}
+<div class="navbar" style="background-color: darkslategray;">
+    <img src="data:image/jpeg;base64,{{ image }}" style="margin-right : 5px; vertical-align: middle;" />
+    <span style="vertical-align: middle;font-size: 2em;" class="navbar-brand">
+        <b>{{ team["teamNumber"] }}-{{ team["nameShort"] }}</b>
+    </span>
+    <span style="vertical-align: middle;font-size: 1.25em; display:flexbox; float:right; word-wrap:normal;"
+        class="navbar-brand">
+        <b>{{ event_details["name"] }}</b>
+    </span><br />
+</div>
+{% if qual_matches | length > 0 %}
+    {{ match_macros.match_grid(event_rank, qual_matches, team, "Qualification", ccwms, oprs, dprs) }}
+{% endif %}
+{% if playoff_matches | length > 0 %}
+    {{ match_macros.match_grid(event_rank, playoff_matches, team, "Playoff") }}
+{% endif %}
+{% endblock %}
