@@ -9,19 +9,13 @@ from model.tba_api import TbaAPI
 
 from flask_caching import Cache
 
-cache_servers = os.environ.get('MEMCACHIER_SERVERS')
-if cache_servers == None:
-    config = {
-        "DEBUG": True,          # some Flask specific configs
-        "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
-        "CACHE_DEFAULT_TIMEOUT": 60
-    }
-else:
-    config = {
-        "DEBUG": True,          # some Flask specific configs
-        "CACHE_TYPE": "MemcachedCache",
-        "CACHE_DEFAULT_TIMEOUT": 60
-    }
+config = {
+    "DEBUG": True,          # some Flask specific configs
+    "CACHE_TYPE": "MemcachedCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 3600
+}
+if os.environ.get('MEMCACHIER_SERVERS') == None:
+    config["CACHE_TYPE"] = "SimpleCache"
 
 app = Flask(__name__)
 app.config.from_mapping(config)
@@ -30,18 +24,18 @@ app.wsgi_app = wrap_wsgi_app(app.wsgi_app)
 
 # Replace the existing home function with the one below
 @app.route("/")
-@cache.memoize(120)
+@cache.memoize()
 def home():
     return render_template("home.html")
 
 # New functions
 @app.route("/about/")
-@cache.memoize(120)
+@cache.memoize()
 def about():
     return render_template("about.html")
 
 @app.route("/contact/")
-@cache.memoize(120)
+@cache.memoize()
 def contact():
     return render_template("contact.html")
 
