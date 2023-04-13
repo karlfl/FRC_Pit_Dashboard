@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- refresh page every x seconds -->
-        <!-- <meta http-equiv="refresh" content="180" > -->
-        <meta charset="utf-8" />
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
-    </head>
 
-    <body>
-        <div class="body-content">
-            {% block content %}
-            {% endblock %}
-            <hr/>
-            <footer>
-                <p>&copy; 2018</p>
-            </footer>
-        </div>
-    </body>
+<head>
+    <!-- refresh page every x seconds -->
+    <!-- <meta http-equiv="refresh" content="180" > -->
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
+</head>
+
+<body>
+    <div class="body-content">
+        {% block content %}
+        {% endblock %}
+        <hr />
+        <footer>
+            <div>
+                <span style="width:33.33%;vertical-align: middle;float:left;text-align:left">
+                    &copy; 2023
+                </span>
+                <span style="width:33.33%;vertical-align: middle;float:left;text-align:center;">
+                    Team 7491 - Cyber Soldiers
+                </span>
+                <span style="width:33.33%;vertical-align: middle;float:right;text-align:right">
+                    Genesee Christian School
+                </span>
+            </div>
+        </footer>
+    </div>
+</body>
+
 </html>

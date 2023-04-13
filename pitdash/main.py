@@ -4,8 +4,7 @@ from datetime import datetime
 
 from google.appengine.api import memcache, wrap_wsgi_app
 
-from model.frc_api import FrcAPI
-from model.tba_api import TbaAPI
+from model.pitdash import PitData
 
 from flask_caching import Cache
 
@@ -40,27 +39,19 @@ def contact():
     return render_template("contact.html")
 
 @app.route("/pitdash/<season>/<eventCode>/<teamNumber>")
-@cache.memoize(120)
+@cache.memoize(5)
 def pit_dash(season, eventCode, teamNumber):
-    model = FrcAPI(season=season, district_code="FIM", team_number=teamNumber,event_code=eventCode)
-    team_avatar = model.get_avatar_image_encoded()
-    team_details = model.get_team_details()
-    event_details = model.get_event_details()
-    event_ranking = model.get_event_ranking()
-    qual_matches = model.get_event_matches(tournament_level='qual')
-    playoff_matches = model.get_event_matches(tournament_level='playoff')
-    tba_model = TbaAPI(season=season, district_code="FIM", team_number=teamNumber,event_code=eventCode)
-    team_ccwms, team_oprs, team_dprs = tba_model.get_event_team_oprs(eventCode, teamNumber)
-    return render_template("pitdash.html", team = team_details, 
-                           image = team_avatar, 
-                           event_details = event_details, 
-                           event_rank = event_ranking, 
-                           qual_matches = qual_matches,
-                           playoff_matches = playoff_matches,
-                           ccwms=team_ccwms,
-                           oprs=team_oprs,
-                           dprs=team_dprs,
-                           event_code = eventCode.upper())
+    pit_model = PitData(season, teamNumber, eventCode)
+    event = pit_model.get_event_details()
+    team = pit_model.get_team_details()
+    stats = pit_model.get_team_stats()
+    matches = pit_model.get_matches()
+    return render_template("pitdash.html",
+                           season = season, 
+                           event = event, 
+                           team = team,
+                           stats = stats,
+                           matches = matches)
 
 if __name__=='__main__':
     app.run(debug=True)

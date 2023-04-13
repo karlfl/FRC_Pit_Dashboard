@@ -1,34 +1,26 @@
 {# templates/macros.html #}
 
-{% macro match_grid(event_rank, matches, team, match_type, ccwms=None, oprs=None, dprs=None) %}
-<div class="navbar" style="display:inline-block;width:100%">
-    <span style="vertical-align: middle;float:left;width: 33.333%;text-align:left" class="navbar-brand">
+{% macro match_grid(season, event, team, stats, matches, match_type) %}
+<div class="navbar">
+    <span style="vertical-align: middle;float:left;text-align:left" class="navbar-brand">
         {{ match_type }} Matches
     </span>
-    <span style="vertical-align: middle;float:left;width: 33.333%;text-align:center" class="navbar-brand">
-    {% if ccwms != None or oprs != None or dprs != None %}
-        CCWMS: {{ ccwms }} &nbsp;&nbsp; OPRS: {{ oprs }} &nbsp;&nbsp; DPRS: {{ dprs }}
-    {% else %} 
-        &nbsp;
-    {% endif %}
-    </span>
-
-    {% if event_rank != None %}
-    <span style="vertical-align: middle;float:left;width: 33.333%;text-align:right" class="navbar-brand">
-        Rank: {{ event_rank["rank"] }} &nbsp;&nbsp; Record: {{event_rank["wins"]}} - {{event_rank["losses"]}} - {{event_rank["ties"]}}
+    {% if stats != None %}
+    <span style="vertical-align: middle;float:right;text-align:right" class="navbar-brand">
+        Rank: {{ stats["rank"] }} &nbsp;&nbsp; Record: {{stats["wins"]}} - {{stats["losses"]}} - {{stats["ties"]}}
     </span>
     {% endif %}
 </div>
 <table class="match-table">
     <thead>
         <tr>
-            <th colspan="1">Match</th>
+            <th>Match</th>
             <th colspan="3">Red Alliance</th>
             <th>Score</th>
             <th colspan="3">Blue Alliance</th>
             <th>Score</th>
             <!-- <th>Alliance</th> -->
-            <th>W/L/T</th>
+            <th>Win/Loss/Tie</th>
         </tr>
     </thead>
     <tbody>
@@ -52,7 +44,7 @@
                 {% set redwin = "" %}
                 {% set bluewin = "winner" %}
             {% endif %}   
-            {% set teamPos = (match["teams"]| selectattr("teamNumber","equalto",team["teamNumber"])|list)[0]['station'] %}
+            {% set teamPos = (match["teams"]| selectattr("teamNumber","equalto",team["number"]|int)|list)[0]['station'] %}
             {% set alliance = teamPos[:-1] %}
             {% set position = teamPos[-1:] %}
             {% if (alliance == winner) %}
@@ -69,6 +61,11 @@
             {% else %}
                 {% set teamScore = bluScore %}
             {% endif %}
+            {% if match_type == "Qualification" %}
+                {% set tbaUrl = season|string + event["code"] +"_qm" + match['matchNumber']|string %}
+            {% else %}
+                {% set tbaUrl = season|string + event["code"] +"_sf" + match['matchNumber']|string %}
+            {% endif %}
             <tr>
                 <td class='{{alliance.lower()}}'>{{ match["matchNumber"] }}</td>
                 {{ match_alliance(match["teams"][0:3], team) }}
@@ -76,7 +73,7 @@
                 {{ match_alliance(match["teams"][3:], team) }}
                 <td class='blue {{bluewin.lower()}}'>{{ bluScore }}</td>
                 <!-- <td style="text-align:right">{{ alliance }} {{ position }} </td> -->
-                <td>{{ outcome }} - {{ teamScore }}</td>
+                <td><a href="https://www.thebluealliance.com/match/{{tbaUrl.lower()}}">{{ outcome }} - {{ teamScore }}</a></td>
             </tr>
             {% else %}
             <tr>
@@ -88,10 +85,12 @@
     </tbody>
 </table>
 {% endmacro %}
+
+
 {% macro match_alliance(match_teams, team) %}
     {% for match_team in match_teams %}
         {% set alliance_color = match_team['station'][:-1].lower() %}
-        {% if match_team['teamNumber'] == team['teamNumber'] %} 
+        {% if match_team['teamNumber'] == team['number']|int  %} 
             <td class='{{ alliance_color }} current-team'>{{ match_team["teamNumber"] }}</td>
         {% else %}
             <td class='{{ alliance_color }}'>{{ match_team["teamNumber"] }}</td>
