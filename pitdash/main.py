@@ -39,7 +39,7 @@ def contact():
     return render_template("contact.html")
 
 @app.route("/pitdash/<season>/<eventCode>/<teamNumber>")
-@cache.memoize(5)
+@cache.memoize(120)
 def pit_dash(season, eventCode, teamNumber):
     pit_model = PitData(season, teamNumber, eventCode)
     event = pit_model.get_event_details()
