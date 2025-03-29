@@ -14,7 +14,7 @@
 <table class="match-table">
     <thead>
         <tr>
-            <th>Match</th>
+            <th width="200">Match</th>
             <th colspan="3">Red Alliance</th>
             <th>Score</th>
             <th colspan="3">Blue Alliance</th>
@@ -67,12 +67,16 @@
                 {% set tbaUrl = season|string + event["code"] +"_sf" + match['matchNumber']|string %}
             {% endif %}
             <tr>
+            {% if match_type == "Qualification" %}
                 <td class='{{alliance.lower()}}'>{{ match["matchNumber"] }}</td>
+            {% else %}
+                <td class='{{alliance.lower()}}'>{{ match["description"] }}</td>
+            {% endif %}
                 {{ match_alliance(match["teams"][0:3], team) }}
                 <td class='score {{redwin.lower()}}'>{{ redScore }}</td>
                 {{ match_alliance(match["teams"][3:], team) }}
                 <td class='score {{bluewin.lower()}}'>{{ bluScore }}</td>
-            {% if teamScore == 0 %}
+            {% if teamScore == 0  and match_type == "Qualification" %}
                 {% set matchTime = match["autoStartTime"][11:16] %}
                 <!-- <td style="text-align:right">{{ alliance }} {{ position }} </td> -->
                 <td><a href="https://www.thebluealliance.com/match/{{tbaUrl.lower()}}">{{ matchTime }}</a></td>

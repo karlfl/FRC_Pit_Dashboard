@@ -43,7 +43,6 @@ class PitData:
     def get_matches(self):
         qual_matches = self.frc_model.get_event_matches(self.first_event_code, self.team_number, tournament_level='qual')
         playoff_matches = self.frc_model.get_event_matches(self.first_event_code, self.team_number, tournament_level='playoff')
-        tba_matches = self.tba_model.get_event_matches(self.tba_event_code, self.team_number)
         return {
             "qualification": qual_matches,
             "playoff": playoff_matches
