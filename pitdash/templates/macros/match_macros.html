@@ -69,11 +69,17 @@
             <tr>
                 <td class='{{alliance.lower()}}'>{{ match["matchNumber"] }}</td>
                 {{ match_alliance(match["teams"][0:3], team) }}
-                <td class='red {{redwin.lower()}}'>{{ redScore }}</td>
+                <td class='score {{redwin.lower()}}'>{{ redScore }}</td>
                 {{ match_alliance(match["teams"][3:], team) }}
-                <td class='blue {{bluewin.lower()}}'>{{ bluScore }}</td>
+                <td class='score {{bluewin.lower()}}'>{{ bluScore }}</td>
+            {% if teamScore == 0 %}
+                {% set matchTime = match["autoStartTime"][11:16] %}
+                <!-- <td style="text-align:right">{{ alliance }} {{ position }} </td> -->
+                <td><a href="https://www.thebluealliance.com/match/{{tbaUrl.lower()}}">{{ matchTime }}</a></td>
+            {% else %}
                 <!-- <td style="text-align:right">{{ alliance }} {{ position }} </td> -->
                 <td><a href="https://www.thebluealliance.com/match/{{tbaUrl.lower()}}">{{ outcome }} - {{ teamScore }}</a></td>
+            {% endif %}
             </tr>
             {% else %}
             <tr>

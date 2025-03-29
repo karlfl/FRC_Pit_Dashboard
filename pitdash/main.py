@@ -10,7 +10,7 @@ from flask_caching import Cache
 
 config = {
     "DEBUG": True,          # some Flask specific configs
-    "CACHE_TYPE": "MemcachedCache",  # Flask-Caching related configs
+    "CACHE_TYPE": "MemcachedCache", 
     "CACHE_DEFAULT_TIMEOUT": 3600
 }
 if os.environ.get('MEMCACHIER_SERVERS') == None:
@@ -39,7 +39,7 @@ def contact():
     return render_template("contact.html")
 
 @app.route("/pitdash/<season>/<eventCode>/<teamNumber>")
-@cache.memoize(120)
+@cache.memoize()
 def pit_dash(season, eventCode, teamNumber):
     pit_model = PitData(season, teamNumber, eventCode)
     event = pit_model.get_event_details()

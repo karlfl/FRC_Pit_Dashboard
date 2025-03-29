@@ -52,7 +52,7 @@ class FrcAPI:
         return distTeam
     
     def get_event_details(self, tournament_level ='qual'):
-        endpoint = 'events/'
+        endpoint = 'events'
         query = '?eventCode=' + self.event_code
         json = self.get_from_api(endpoint, query)
         # Event Rank/Record

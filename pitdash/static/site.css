@@ -70,6 +70,10 @@ table.match-table td.blue {
   background:#2c7da0;
 }
 
+table.match-table td.score {
+  background:#5f696d;
+}
+
 table.match-table td.red-favorite {
   border: 2px solid #ff0000;
 }
