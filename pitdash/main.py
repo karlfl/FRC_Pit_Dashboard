@@ -5,6 +5,7 @@ from datetime import datetime
 from google.appengine.api import memcache, wrap_wsgi_app
 
 from model.pitdash import PitData
+from model.eventdata import EventData
 
 from flask_caching import Cache
 
@@ -38,6 +39,15 @@ def about():
 def contact():
     return render_template("contact.html")
 
+@app.route("/pitdash/")
+@cache.memoize()
+def pit_dash_main():
+    season = current_year = datetime.today().year
+    pit_model = PitData(str(season), '7491', 'miket')
+    match_df = pit_model.get_matches_df()
+    return pit_dash(str(season), eventCode='miket', teamNumber='7491')
+
+
 @app.route("/pitdash/<season>/<eventCode>/<teamNumber>")
 @cache.memoize()
 def pit_dash(season, eventCode, teamNumber):
@@ -53,5 +63,19 @@ def pit_dash(season, eventCode, teamNumber):
                            stats = stats,
                            matches = matches)
 
+@app.route("/events")
+@cache.memoize()
+def events():
+    season = current_year = datetime.today().year
+    event_model = EventData(str(season))
+    events = event_model.get_event_list_df().sort_values(by=['weekNumber','code'])
+    # return events.to_html(header="true", table_id="table")
+    return render_template("events.html", events=events)
+
+@app.template_filter('custom_replace')
+def custom_replace(s, old, new):
+    return s.replace(old, new)
+
+    
 if __name__=='__main__':
     app.run(debug=True)

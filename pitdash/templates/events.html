@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}
+FIM Event List
+{% endblock %}
+{% block content %}
+<table class="event-table">
+    <thead>
+        <tr>
+            <th>Week</th>
+            <th>Event Code</th>
+            <th>Event Name</th>
+            <th>City</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, event in events.iterrows() %}
+        <tr>
+            <td>{{ event.weekNumber }}</td>
+            <td>{{ event.code }}</td>
+            <td>{{ event['name'] | custom_replace("FIM District ", "")  }}</td>
+            <td>{{ event.city }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
